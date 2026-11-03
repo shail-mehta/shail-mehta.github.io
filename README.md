@@ -1,1 +1,0 @@
-# shail-mehta.github.io
