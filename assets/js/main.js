@@ -56,6 +56,60 @@
     });
   }
 
+  // Active section in menu while scrolling
+  if (nav) {
+    const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
+    const sections = navLinks
+      .map((link) => {
+        const id = link.getAttribute("href")?.slice(1);
+        const el = id ? document.getElementById(id) : null;
+        return el ? { id, el, link } : null;
+      })
+      .filter(Boolean);
+
+    const setActive = (id) => {
+      navLinks.forEach((link) => {
+        const match = link.getAttribute("href") === `#${id}`;
+        link.classList.toggle("is-active", match);
+        if (match) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    };
+
+    const activateFromScroll = () => {
+      const headerOffset = header?.offsetHeight || 74;
+      const probe = window.scrollY + headerOffset + 24;
+      let current = sections[0]?.id || "";
+
+      for (const item of sections) {
+        if (item.el.offsetTop <= probe) current = item.id;
+      }
+
+      // Near page bottom → last section (Contact)
+      if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 48
+      ) {
+        current = sections[sections.length - 1]?.id || current;
+      }
+
+      // Top of page / hero → no nav item active
+      if (window.scrollY < 80) {
+        navLinks.forEach((link) => {
+          link.classList.remove("is-active");
+          link.removeAttribute("aria-current");
+        });
+        return;
+      }
+
+      if (current) setActive(current);
+    };
+
+    activateFromScroll();
+    window.addEventListener("scroll", activateFromScroll, { passive: true });
+    window.addEventListener("resize", activateFromScroll);
+  }
+
   const reveals = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(
