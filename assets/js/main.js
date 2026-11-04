@@ -194,4 +194,31 @@
     medal.setAttribute("tabindex", "0");
     medal.setAttribute("aria-label", tip);
   });
+
+  const skillBars = document.querySelectorAll("[data-skill-bar]");
+  if (skillBars.length) {
+    const animateBars = () => {
+      skillBars.forEach((bar, i) => {
+        window.setTimeout(() => bar.classList.add("is-animated"), i * 70);
+      });
+    };
+
+    if ("IntersectionObserver" in window) {
+      const sio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            animateBars();
+            sio.disconnect();
+          });
+        },
+        { threshold: 0.25 }
+      );
+      const graph = document.querySelector(".skills-graph");
+      if (graph) sio.observe(graph);
+      else animateBars();
+    } else {
+      animateBars();
+    }
+  }
 })();
