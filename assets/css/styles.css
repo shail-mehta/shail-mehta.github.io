@@ -56,7 +56,11 @@ html[data-theme="light"] {
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Keep anchors clear of sticky header without revealing prior section */
+  scroll-padding-top: calc(var(--header) + 8px);
+}
 body {
   margin: 0;
   font-family: var(--body);
@@ -150,16 +154,30 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 }
 .site-nav { display: flex; align-items: center; gap: 1.2rem; }
 .site-nav a:not(.nav-cta) {
+  position: relative;
   color: var(--muted); font-weight: 600; font-size: .94rem;
   transition: color .2s ease;
 }
 .site-nav a:not(.nav-cta):hover,
 .site-nav a:not(.nav-cta):focus-visible { color: var(--text); }
+.site-nav a:not(.nav-cta).is-active {
+  color: var(--mint);
+}
+.site-nav a:not(.nav-cta).is-active::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -.35rem;
+  height: 2px; border-radius: 2px;
+  background: var(--mint);
+}
 .nav-cta {
   min-height: 2.45rem !important;
   padding: .55rem 1.05rem !important;
   font-size: .9rem;
   color: #fff !important;
+}
+.nav-cta.is-active {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mint) 55%, transparent);
 }
 .nav-toggle { display: none; width: 2.5rem; height: 2.5rem; }
 .nav-toggle span {
@@ -384,9 +402,10 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 }
 
 /* Sections — equal vertical rhythm */
-.section { padding: var(--section-y) 0; content-visibility: auto; contain-intrinsic-size: 1px 800px; }
+.section { padding: var(--section-y) 0; }
 .section + .section { margin-top: 0; }
-#about.section { content-visibility: visible; }
+/* Keep hero badges (Noteworthy pill) clear of sticky header on logo click */
+#top { scroll-margin-top: 0; }
 .section-alt { background: linear-gradient(180deg, transparent, rgba(127,127,127,.04), transparent); }
 .section-head { max-width: 40rem; margin-bottom: 1.25rem; }
 .eyebrow {
@@ -1085,6 +1104,7 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
   }
   .site-nav.is-open { display: flex; }
   .site-nav a { padding: .7rem .35rem; }
+  .site-nav a:not(.nav-cta).is-active::after { bottom: .2rem; }
   .nav-cta { text-align: center; }
 }
 
