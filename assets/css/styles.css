@@ -75,12 +75,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 200; background: var(--coral); color: #fff; padding: .7rem 1rem; border-radius: .8rem; }
 .skip-link:focus { top: 1rem; }
 
-.ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; contain: strict; }
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(40px);
-  animation: drift 14s ease-in-out infinite;
+  filter: blur(32px);
+  animation: drift 18s ease-in-out infinite;
+  will-change: transform;
+  contain: layout paint;
 }
 .blob-a {
   width: 34rem; height: 34rem; top: -8%; right: -8%;
@@ -382,8 +384,9 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 }
 
 /* Sections — equal vertical rhythm */
-.section { padding: var(--section-y) 0; }
+.section { padding: var(--section-y) 0; content-visibility: auto; contain-intrinsic-size: 1px 800px; }
 .section + .section { margin-top: 0; }
+#about.section { content-visibility: visible; }
 .section-alt { background: linear-gradient(180deg, transparent, rgba(127,127,127,.04), transparent); }
 .section-head { max-width: 40rem; margin-bottom: 1.25rem; }
 .eyebrow {
